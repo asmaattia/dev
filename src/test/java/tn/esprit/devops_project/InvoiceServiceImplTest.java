@@ -73,25 +73,6 @@ public class InvoiceServiceImplTest {
     }
 
 
-/*
-    @Test
-    public void testGetInvoicesBySupplier() {
-        Long idSupplier = 1L;
-
-
-        List<Invoice> simulatedInvoices = Arrays.asList(new Invoice(), new Invoice());
-
-        Supplier supplier = new Supplier();
-        supplier.setIdSupplier(idSupplier);
-
-        when(supplierRepository.findById(idSupplier)).thenReturn(Optional.of(supplier));
-
-        supplier.setInvoices(new HashSet<>(simulatedInvoices));
-
-        List<Invoice> retrievedInvoices = invoiceService.getInvoicesBySupplier(idSupplier);
-
-        assertEquals(simulatedInvoices.size(), retrievedInvoices.size());
-    }*/
     @Test
     public void testRetrieveAllInvoice() {
         List<Invoice> mockInvoices = new ArrayList<>();
