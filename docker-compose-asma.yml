@@ -1,28 +1,34 @@
-version: '3'
+version: '2'
 services:
-  mysql-devops:
-    image: mysql
-    container_name:  mysql-devops
+  mysqldb:
+    container_name: mysql-devops
+    image: mysql:latest
+    restart: unless-stopped
     ports:
-      - 3306:3306
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
+      - "3306:3306"
     volumes:
-      - mydb:/var/lib/mysql
-    networks:
-      - devops-network
-
-  spring-devops-project:
-    container_name:  spring-devops-project
-    build: .
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+  devops-project:
+    container_name: my-spring-app
+    image: devops_project_image:latest
+    depends_on:
+      - mysqldb
+    build: ./
+    restart: on-failure
     ports:
-      - 8086:8086
-    networks:
-      - devops-network
-
+      - "8082:8082"
+    volumes:
+      - .m2:/root/.m2
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/devopsTEST?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - spring.jpa.show-sql=true
+      - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+      - spring.jpa.hibernate.ddl-auto=update
+    stdin_open: true
+    tty: true
 volumes:
-  mydb:
-
-networks:
-  devops-network:
-    driver: bridge
+  db:
