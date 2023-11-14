@@ -1,0 +1,28 @@
+version: '3'
+services:
+  mysql-devops:
+    image: mysql
+    container_name:  mysql-devops
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    volumes:
+      - mydb:/var/lib/mysql
+    networks:
+      - devops-network
+
+  spring-devops-project:
+    container_name:  spring-devops-project
+    build: .
+    ports:
+      - 8086:8086
+    networks:
+      - devops-network
+
+volumes:
+  mydb:
+
+networks:
+  devops-network:
+    driver: bridge
