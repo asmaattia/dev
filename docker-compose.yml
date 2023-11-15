@@ -1,34 +1,37 @@
-version: '2'
+version: '3.3'
+
 services:
-  mysqldb:
-    container_name: mysql-devops
-    image: mysql:latest
-    restart: unless-stopped
+  mysqlDev-container:
+    image: mysql
+    container_name: mysqlDev-container
     ports:
       - "3306:3306"
-    volumes:
-      - db:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-  devops-project:
-    container_name: my-spring-app
-    image: devops_project_image:latest
-    depends_on:
-      - mysqldb
-    build: ./
-    restart: on-failure
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: devops
+    networks:
+      - app-network
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - mysql_config:/etc/mysql/conf.d
+
+  conteneur_devops_project:
+    image: asmaattia/devops_project_image:latest
+    container_name: conteneur_devops_project
     ports:
       - "8082:8082"
-    volumes:
-      - .m2:/root/.m2
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/devopsTEST?createDatabaseIfNotExist=true
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
-      - spring.jpa.show-sql=true
-      - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
-      - spring.jpa.hibernate.ddl-auto=update
-    stdin_open: true
-    tty: true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqlDev-container:3306/devops
+    depends_on:
+      - mysqlDev-container
+    networks:
+      - app-network
+
 volumes:
-  db:
+  mysql_data:
+  mysql_config:
+
+networks:
+  app-network:
+    driver: bridge
