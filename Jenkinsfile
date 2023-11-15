@@ -9,19 +9,8 @@ pipeline {
     stages {
 
 
-        stage('Git') {
-            steps {
-                git branch: 'main', url: 'https://github.com/asmaattia/dev'
-            }
-        }
-           stage('Show Current Branch') {
-        steps {
-            script {
-               sh 'git branch'
-            }
 
-        }
-        }
+       
 
         stage('Maven Build') {
             steps {
