@@ -7,8 +7,10 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: 'your_root_password_here'  # Set your desired root password
       MYSQL_DATABASE: devops
+      MYSQL_USER: 'asma'                 # Set your desired non-root username
+      MYSQL_PASSWORD: 'asma'             # Set your desired non-root password
     networks:
       - app-network
     volumes:
@@ -18,7 +20,6 @@ services:
   conteneur_devops_project:
     image: asmaattia/devops_project_image:latest
     container_name: conteneur_devops_project
-
     ports:
       - "8082:8082"
     depends_on:
@@ -33,3 +34,4 @@ volumes:
 networks:
   app-network:
     driver: bridge
+
